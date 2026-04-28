@@ -1,0 +1,42 @@
+{
+  "apiVersion": "modelcarry.sourceos.dev/v1",
+  "kind": "SourceOSCarryRef",
+  "metadata": {
+    "name": "speech-default",
+    "version": "0.1.0"
+  },
+  "spec": {
+    "surface": "speech",
+    "serviceRef": "service://socioprophet/modality/speech/default@0.1.0",
+    "client": {
+      "packageRef": "sourceos-client://modality/speech@0.1.0",
+      "entrypoint": "sourceos-ai speech",
+      "protocol": "tritrpc"
+    },
+    "launch": {
+      "workspaceScopes": ["user", "project", "agent"],
+      "defaultMode": "remote-service",
+      "requiresNetwork": true
+    },
+    "cache": {
+      "mode": "metadata-only",
+      "maxBytes": 104857600,
+      "pathHint": "~/.local/share/sourceos/model-carry/speech"
+    },
+    "policy": {
+      "policyRef": "policy://sourceos/model-carry/standard",
+      "requiresSignedServiceRef": true,
+      "dataClasses": ["audio", "transcript"]
+    },
+    "evidence": {
+      "emitInvocationReceipt": true,
+      "emitPolicyCheck": true,
+      "receiptSink": "sourceos://evidence/model-carry"
+    },
+    "authority": {
+      "sourceosRole": "carry-only",
+      "platformPromotionRequired": true,
+      "mayReplaceServiceArtifact": false
+    }
+  }
+}
