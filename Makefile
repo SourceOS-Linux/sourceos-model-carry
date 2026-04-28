@@ -5,6 +5,9 @@ DIST_DIR := dist
 VERSION ?= 0.1.0-dev
 COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 DATE ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+GOOS ?= $(shell go env GOOS 2>/dev/null || uname -s | tr A-Z a-z)
+GOARCH ?= $(shell go env GOARCH 2>/dev/null || uname -m)
+DIST_NAME := $(BIN)_$(VERSION)_$(GOOS)_$(GOARCH)
 LDFLAGS := -X main.version=$(VERSION) -X main.commit=$(COMMIT) -X main.date=$(DATE)
 
 build:
@@ -21,15 +24,13 @@ validate: build
 	bin/$(BIN) self-test --refs examples
 	bin/$(BIN) emit-evidence --refs examples >/tmp/sourceos-ai-evidence.json
 
-tdist_name = $(BIN)_$(VERSION)_$(shell uname -s | tr A-Z a-z)_$(shell uname -m)
-
 dist: validate
 	mkdir -p $(DIST_DIR)
-	cp bin/$(BIN) $(DIST_DIR)/$(tdist_name)
-	(cd $(DIST_DIR) && shasum -a 256 $(tdist_name) > $(tdist_name).sha256)
+	cp bin/$(BIN) $(DIST_DIR)/$(DIST_NAME)
+	(cd $(DIST_DIR) && sha256sum $(DIST_NAME) > $(DIST_NAME).sha256)
 
 release-dry-run: dist
-	@echo "release dry-run complete: $(DIST_DIR)/$(tdist_name)"
+	@echo "release dry-run complete: $(DIST_DIR)/$(DIST_NAME)"
 
 clean:
 	rm -rf bin $(DIST_DIR)
