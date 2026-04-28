@@ -1,0 +1,15 @@
+{
+  "apiVersion": "modelcarry.sourceos.dev/v1",
+  "kind": "SourceOSCarryRef",
+  "metadata": {"name": "ocr-default", "version": "0.1.0"},
+  "spec": {
+    "surface": "ocr",
+    "serviceRef": "service://socioprophet/modality/ocr/default@0.1.0",
+    "client": {"packageRef": "sourceos-client://modality/ocr@0.1.0", "entrypoint": "sourceos-ai ocr", "protocol": "tritrpc"},
+    "launch": {"workspaceScopes": ["user", "project", "agent"], "defaultMode": "remote-service", "requiresNetwork": true},
+    "cache": {"mode": "metadata-only", "maxBytes": 104857600, "pathHint": "~/.local/share/sourceos/model-carry/ocr"},
+    "policy": {"policyRef": "policy://sourceos/model-carry/standard", "requiresSignedServiceRef": true, "dataClasses": ["document", "image", "text"]},
+    "evidence": {"emitInvocationReceipt": true, "emitPolicyCheck": true, "receiptSink": "sourceos://evidence/model-carry"},
+    "authority": {"sourceosRole": "carry-only", "platformPromotionRequired": true, "mayReplaceServiceArtifact": false}
+  }
+}

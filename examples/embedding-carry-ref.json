@@ -1,0 +1,15 @@
+{
+  "apiVersion": "modelcarry.sourceos.dev/v1",
+  "kind": "SourceOSCarryRef",
+  "metadata": {"name": "embedding-default", "version": "0.1.0"},
+  "spec": {
+    "surface": "embedding",
+    "serviceRef": "service://socioprophet/modality/embedding/default@0.1.0",
+    "client": {"packageRef": "sourceos-client://modality/embedding@0.1.0", "entrypoint": "sourceos-ai embed", "protocol": "tritrpc"},
+    "launch": {"workspaceScopes": ["user", "project", "agent"], "defaultMode": "remote-service", "requiresNetwork": true},
+    "cache": {"mode": "artifact-index", "maxBytes": 1073741824, "pathHint": "~/.local/share/sourceos/model-carry/embedding"},
+    "policy": {"policyRef": "policy://sourceos/model-carry/standard", "requiresSignedServiceRef": true, "dataClasses": ["text", "document", "vector-index"]},
+    "evidence": {"emitInvocationReceipt": true, "emitPolicyCheck": true, "receiptSink": "sourceos://evidence/model-carry"},
+    "authority": {"sourceosRole": "carry-only", "platformPromotionRequired": true, "mayReplaceServiceArtifact": false}
+  }
+}
