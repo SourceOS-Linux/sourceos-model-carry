@@ -1,0 +1,15 @@
+{
+  "apiVersion": "modelcarry.sourceos.dev/v1",
+  "kind": "SourceOSCarryRef",
+  "metadata": {"name": "video-default", "version": "0.1.0"},
+  "spec": {
+    "surface": "video",
+    "serviceRef": "service://socioprophet/modality/video/default@0.1.0",
+    "client": {"packageRef": "sourceos-client://modality/video@0.1.0", "entrypoint": "sourceos-ai video", "protocol": "tritrpc"},
+    "launch": {"workspaceScopes": ["user", "project", "agent"], "defaultMode": "remote-service", "requiresNetwork": true},
+    "cache": {"mode": "metadata-only", "maxBytes": 104857600, "pathHint": "~/.local/share/sourceos/model-carry/video"},
+    "policy": {"policyRef": "policy://sourceos/model-carry/standard", "requiresSignedServiceRef": true, "dataClasses": ["video", "audio", "transcript", "frames"]},
+    "evidence": {"emitInvocationReceipt": true, "emitPolicyCheck": true, "receiptSink": "sourceos://evidence/model-carry"},
+    "authority": {"sourceosRole": "carry-only", "platformPromotionRequired": true, "mayReplaceServiceArtifact": false}
+  }
+}
