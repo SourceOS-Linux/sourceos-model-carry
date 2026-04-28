@@ -1,0 +1,15 @@
+{
+  "apiVersion": "modelcarry.sourceos.dev/v1",
+  "kind": "SourceOSCarryRef",
+  "metadata": {"name": "image-default", "version": "0.1.0"},
+  "spec": {
+    "surface": "image",
+    "serviceRef": "service://socioprophet/modality/image/default@0.1.0",
+    "client": {"packageRef": "sourceos-client://modality/image@0.1.0", "entrypoint": "sourceos-ai image", "protocol": "tritrpc"},
+    "launch": {"workspaceScopes": ["user", "project", "agent"], "defaultMode": "remote-service", "requiresNetwork": true},
+    "cache": {"mode": "metadata-only", "maxBytes": 104857600, "pathHint": "~/.local/share/sourceos/model-carry/image"},
+    "policy": {"policyRef": "policy://sourceos/model-carry/standard", "requiresSignedServiceRef": true, "dataClasses": ["image", "metadata"]},
+    "evidence": {"emitInvocationReceipt": true, "emitPolicyCheck": true, "receiptSink": "sourceos://evidence/model-carry"},
+    "authority": {"sourceosRole": "carry-only", "platformPromotionRequired": true, "mayReplaceServiceArtifact": false}
+  }
+}
