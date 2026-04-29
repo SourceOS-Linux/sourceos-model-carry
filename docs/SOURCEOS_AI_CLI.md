@@ -9,12 +9,16 @@ It validates signed-reference-shaped service carry manifests, lists available go
 ```bash
 sourceos-ai --version
 sourceos-ai doctor --refs examples
+sourceos-ai list --refs examples
+sourceos-ai validate --refs examples
 sourceos-ai self-test --refs examples
 sourceos-ai emit-evidence --refs examples
 sourceos-ai carry list --refs examples
 sourceos-ai carry validate --refs examples
 sourceos-ai carry doctor --refs examples
 ```
+
+The `list` and `validate` commands are top-level aliases that match the `carry list` and `carry validate` subcommands respectively, provided for ergonomic CLI use and Homebrew formula testing.
 
 ## Build and validation
 
