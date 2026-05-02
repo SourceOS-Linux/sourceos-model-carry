@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "LocalModelProfile",
+  "profileId": "urn:srcos:model-profile:local-llama32-1b",
+  "displayName": "Local Llama 3.2 1B Router",
+  "runtime": {
+    "kind": "ollama",
+    "endpoint": "http://127.0.0.1:11434",
+    "defaultLocalPort": 11434,
+    "launchCommand": "ollama run llama3.2:1b",
+    "healthCommand": "ollama list"
+  },
+  "model": {
+    "provider": "Meta",
+    "family": "Llama 3.2",
+    "name": "llama3.2:1b",
+    "parameterClass": "1b",
+    "ollamaRef": "llama3.2:1b",
+    "ggufRef": null,
+    "contextWindowHint": 128000,
+    "diskSizeHintMb": 1332,
+    "memoryHintMb": 4096,
+    "licenseRef": "https://www.llama.com/llama3_2/license/",
+    "sourceRef": "https://ollama.com/library/llama3.2"
+  },
+  "roles": [
+    "router",
+    "triage",
+    "summarization",
+    "rewrite",
+    "office-assist",
+    "agent-machine-assist",
+    "offline-fallback",
+    "privacy-first-chat"
+  ],
+  "policy": {
+    "localOnlyDefault": true,
+    "sendPromptOffDeviceDefault": false,
+    "allowToolUse": false,
+    "allowNetwork": false,
+    "allowModelDownload": false,
+    "requiresExplicitPull": true,
+    "maxPromptChars": 12000,
+    "fallbackProfileRefs": [
+      "urn:srcos:model-profile:local-llama32-3b"
+    ]
+  },
+  "evidence": {
+    "emitModelAvailability": true,
+    "emitRuntimeHealth": true,
+    "emitRoutingDecision": true,
+    "emitPromptHashOnly": true
+  },
+  "notes": "Default laptop-safe local profile for routing, triage, summarization, rewriting, and Office Plane assist. Model download remains explicit and is not performed by profile validation."
+}
