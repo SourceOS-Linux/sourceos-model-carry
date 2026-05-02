@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/local-model-profile.schema.json",
+  "title": "SourceOS Local Model Profile",
+  "description": "A carry-layer profile for laptop-safe local model services used for routing, summarization, office assist, and fast privacy-preserving fallback behavior.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "profileId",
+    "displayName",
+    "runtime",
+    "model",
+    "roles",
+    "policy"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "v0.1" },
+    "kind": { "const": "LocalModelProfile" },
+    "profileId": { "type": "string", "pattern": "^urn:srcos:model-profile:" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["ollama", "llama.cpp", "mlx", "openai-compatible", "other"] },
+        "endpoint": { "type": ["string", "null"] },
+        "defaultLocalPort": { "type": ["integer", "null"], "minimum": 1, "maximum": 65535 },
+        "launchCommand": { "type": ["string", "null"] },
+        "healthCommand": { "type": ["string", "null"] }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "family", "name", "parameterClass", "licenseRef"],
+      "properties": {
+        "provider": { "type": "string" },
+        "family": { "type": "string" },
+        "name": { "type": "string" },
+        "parameterClass": { "type": "string", "enum": ["sub-1b", "1b", "3b", "4b", "8b", "other"] },
+        "ollamaRef": { "type": ["string", "null"] },
+        "ggufRef": { "type": ["string", "null"] },
+        "contextWindowHint": { "type": ["integer", "null"], "minimum": 1 },
+        "diskSizeHintMb": { "type": ["integer", "null"], "minimum": 1 },
+        "memoryHintMb": { "type": ["integer", "null"], "minimum": 1 },
+        "licenseRef": { "type": "string" },
+        "sourceRef": { "type": ["string", "null"] }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "router",
+          "triage",
+          "summarization",
+          "rewrite",
+          "office-assist",
+          "agent-machine-assist",
+          "offline-fallback",
+          "coding-assist",
+          "privacy-first-chat"
+        ]
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "localOnlyDefault": { "type": "boolean", "default": true },
+        "sendPromptOffDeviceDefault": { "type": "boolean", "default": false },
+        "allowToolUse": { "type": "boolean", "default": false },
+        "allowNetwork": { "type": "boolean", "default": false },
+        "allowModelDownload": { "type": "boolean", "default": false },
+        "requiresExplicitPull": { "type": "boolean", "default": true },
+        "maxPromptChars": { "type": ["integer", "null"], "minimum": 1 },
+        "fallbackProfileRefs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "emitModelAvailability": { "type": "boolean", "default": true },
+        "emitRuntimeHealth": { "type": "boolean", "default": true },
+        "emitRoutingDecision": { "type": "boolean", "default": true },
+        "emitPromptHashOnly": { "type": "boolean", "default": true }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}
