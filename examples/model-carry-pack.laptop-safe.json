@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryPack",
+  "packId": "urn:srcos:model-carry-pack:laptop-safe-small-local",
+  "displayName": "Laptop-safe Small Local Pack",
+  "profileKey": "laptop-safe",
+  "model": {
+    "name": "small-local-chat-model",
+    "family": "local-small",
+    "parameterClass": "3b",
+    "quantization": "runtime-managed",
+    "format": "runtime-managed",
+    "contextWindowHint": 8192,
+    "diskSizeHintMb": 3200,
+    "memoryHintMb": 8192
+  },
+  "runtimeCompatibility": ["ollama-compatible", "llama.cpp", "openai-compatible-local"],
+  "footprint": {
+    "minimumFreeGb": 16,
+    "recommendedFreeGb": 32,
+    "minimumRamGb": 8,
+    "recommendedRamGb": 16
+  },
+  "provenance": {
+    "sourceKind": "runtime-catalog",
+    "sourceUrl": null,
+    "licenseRef": "model-license-required",
+    "modelCardRef": null,
+    "sha256": null,
+    "sha256RequiredBeforeEligibility": false
+  },
+  "taskClasses": ["offline-fallback", "office-assist", "privacy-first-chat", "rewrite"],
+  "labels": ["local-only", "offline-fallback", "runtime-managed"],
+  "policy": {
+    "localOnlyDefault": true,
+    "promptEgressDefault": "deny",
+    "allowToolUseDefault": false,
+    "allowNetworkDefault": false,
+    "requiresExplicitImport": true,
+    "requiresEvidence": true,
+    "eligibleForRoutingBeforeHash": true,
+    "maxPromptChars": 32000
+  },
+  "evidence": {
+    "emitPackVerification": true,
+    "emitRuntimeHealth": true,
+    "emitRouteDecision": true,
+    "emitPromptHashOnly": true
+  },
+  "notes": "Laptop-safe profile for general local fallback and private drafting."
+}
