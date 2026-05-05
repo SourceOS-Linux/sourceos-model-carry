@@ -1,4 +1,4 @@
-.PHONY: build test validate dist release-dry-run clean
+.PHONY: build test validate validate-portable-ai dist release-dry-run clean
 
 BIN := sourceos-ai
 DIST_DIR := dist
@@ -17,7 +17,10 @@ build:
 test:
 	go test ./...
 
-validate: build
+validate-portable-ai:
+	python3 tools/validate_portable_ai_packs.py
+
+validate: build validate-portable-ai
 	python3 tools/validate_carry_refs.py
 	bin/$(BIN) carry validate --refs examples
 	bin/$(BIN) doctor --refs examples
