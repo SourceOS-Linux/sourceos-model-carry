@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryPack",
+  "packId": "urn:srcos:model-carry-pack:byom-gguf-unverified",
+  "displayName": "BYOM GGUF Unverified Pack",
+  "profileKey": "byom-gguf",
+  "model": {
+    "name": "operator-supplied-gguf",
+    "family": "operator-supplied",
+    "parameterClass": "other",
+    "quantization": "operator-supplied",
+    "format": "gguf",
+    "contextWindowHint": null,
+    "diskSizeHintMb": null,
+    "memoryHintMb": null
+  },
+  "runtimeCompatibility": ["llama.cpp", "ollama-compatible", "openai-compatible-local"],
+  "footprint": {
+    "minimumFreeGb": 8,
+    "recommendedFreeGb": 64,
+    "minimumRamGb": 8,
+    "recommendedRamGb": 32
+  },
+  "provenance": {
+    "sourceKind": "local-file",
+    "sourceUrl": null,
+    "licenseRef": "operator-attestation-required",
+    "modelCardRef": null,
+    "sha256": null,
+    "sha256RequiredBeforeEligibility": true
+  },
+  "taskClasses": ["operator-selected"],
+  "labels": ["local-only", "byom-unverified"],
+  "policy": {
+    "localOnlyDefault": true,
+    "promptEgressDefault": "deny",
+    "allowToolUseDefault": false,
+    "allowNetworkDefault": false,
+    "requiresExplicitImport": true,
+    "requiresEvidence": true,
+    "eligibleForRoutingBeforeHash": false,
+    "maxPromptChars": null
+  },
+  "evidence": {
+    "emitPackVerification": true,
+    "emitRuntimeHealth": true,
+    "emitRouteDecision": true,
+    "emitPromptHashOnly": true
+  },
+  "notes": "BYOM placeholder. It is not eligible for governed routing until hash, provenance, and license posture are recorded."
+}
