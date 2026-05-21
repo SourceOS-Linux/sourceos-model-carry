@@ -85,6 +85,8 @@ func usage() {
 Usage:
   sourceos-ai --version
   sourceos-ai doctor [--refs examples]
+  sourceos-ai list [--refs examples]
+  sourceos-ai validate [--refs examples]
   sourceos-ai self-test [--refs examples]
   sourceos-ai emit-evidence [--refs examples]
   sourceos-ai carry list [--refs examples]
@@ -109,6 +111,16 @@ func main() {
 	case "doctor":
 		refs := parseRefs(os.Args[2:])
 		runDoctor(refs)
+	case "list":
+		refs := parseRefs(os.Args[2:])
+		runList(refs)
+	case "validate":
+		refs := parseRefs(os.Args[2:])
+		results := validateDir(refs)
+		printJSON(results)
+		if hasFailures(results) {
+			os.Exit(1)
+		}
 	case "self-test":
 		refs := parseRefs(os.Args[2:])
 		runSelfTest(refs)

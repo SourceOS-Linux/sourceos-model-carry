@@ -20,6 +20,8 @@ test:
 validate: build
 	python3 tools/validate_carry_refs.py
 	bin/$(BIN) carry validate --refs examples
+	bin/$(BIN) validate --refs examples
+	bin/$(BIN) list --refs examples
 	bin/$(BIN) doctor --refs examples
 	bin/$(BIN) self-test --refs examples
 	bin/$(BIN) emit-evidence --refs examples >/tmp/sourceos-ai-evidence.json
