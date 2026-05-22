@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryPack",
+  "packId": "urn:srcos:model-carry-pack:field-kit-local",
+  "displayName": "Field Kit Local Pack",
+  "profileKey": "field-kit",
+  "model": {
+    "name": "field-kit-local-model",
+    "family": "local-field",
+    "parameterClass": "8b",
+    "quantization": "runtime-managed",
+    "format": "runtime-managed",
+    "contextWindowHint": 32768,
+    "diskSizeHintMb": 7200,
+    "memoryHintMb": 16384
+  },
+  "runtimeCompatibility": ["ollama-compatible", "llama.cpp", "openai-compatible-local"],
+  "footprint": {
+    "minimumFreeGb": 64,
+    "recommendedFreeGb": 128,
+    "minimumRamGb": 16,
+    "recommendedRamGb": 32
+  },
+  "provenance": {
+    "sourceKind": "runtime-catalog",
+    "sourceUrl": null,
+    "licenseRef": "model-license-required",
+    "modelCardRef": null,
+    "sha256": null,
+    "sha256RequiredBeforeEligibility": false
+  },
+  "taskClasses": ["offline-fallback", "operator-assist", "evidence-inspection", "field-workroom"],
+  "labels": ["local-only", "offline-fallback", "field-kit", "runtime-managed"],
+  "policy": {
+    "localOnlyDefault": true,
+    "promptEgressDefault": "deny",
+    "allowToolUseDefault": false,
+    "allowNetworkDefault": false,
+    "requiresExplicitImport": true,
+    "requiresEvidence": true,
+    "eligibleForRoutingBeforeHash": true,
+    "maxPromptChars": 64000
+  },
+  "evidence": {
+    "emitPackVerification": true,
+    "emitRuntimeHealth": true,
+    "emitRouteDecision": true,
+    "emitPromptHashOnly": true
+  },
+  "notes": "Portable SSD profile for field and operator use where evidence posture matters more than minimal footprint."
+}
