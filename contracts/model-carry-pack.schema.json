@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/model-carry-pack.schema.json",
+  "title": "SourceOS Model Carry Pack",
+  "description": "A governed portable model pack manifest for SourceOS Portable AI Kit and Local Model Door profile families.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "packId",
+    "displayName",
+    "profileKey",
+    "model",
+    "runtimeCompatibility",
+    "footprint",
+    "provenance",
+    "taskClasses",
+    "labels",
+    "policy",
+    "evidence"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "v0.1" },
+    "kind": { "const": "ModelCarryPack" },
+    "packId": { "type": "string", "pattern": "^urn:srcos:model-carry-pack:" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "profileKey": {
+      "type": "string",
+      "enum": ["tiny-router", "laptop-safe", "office-local", "code-local", "field-kit", "byom-gguf"]
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "family", "parameterClass", "quantization", "format"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "family": { "type": "string", "minLength": 1 },
+        "parameterClass": { "type": "string", "enum": ["sub-1b", "1b", "3b", "4b", "7b", "8b", "12b", "other"] },
+        "quantization": { "type": "string", "minLength": 1 },
+        "format": { "type": "string", "enum": ["ollama-ref", "gguf", "runtime-managed", "openai-compatible-local", "other"] },
+        "contextWindowHint": { "type": ["integer", "null"], "minimum": 1 },
+        "diskSizeHintMb": { "type": ["integer", "null"], "minimum": 1 },
+        "memoryHintMb": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "runtimeCompatibility": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": ["ollama-compatible", "llama.cpp", "openai-compatible-local", "vllm", "sglang", "mlx", "other"]
+      }
+    },
+    "footprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimumFreeGb", "recommendedFreeGb", "minimumRamGb", "recommendedRamGb"],
+      "properties": {
+        "minimumFreeGb": { "type": "integer", "minimum": 1 },
+        "recommendedFreeGb": { "type": "integer", "minimum": 1 },
+        "minimumRamGb": { "type": "integer", "minimum": 1 },
+        "recommendedRamGb": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceKind", "sourceUrl", "licenseRef", "sha256RequiredBeforeEligibility"],
+      "properties": {
+        "sourceKind": { "type": "string", "enum": ["runtime-catalog", "huggingface", "local-file", "vendor", "unknown"] },
+        "sourceUrl": { "type": ["string", "null"] },
+        "licenseRef": { "type": "string", "minLength": 1 },
+        "modelCardRef": { "type": ["string", "null"] },
+        "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" },
+        "sha256RequiredBeforeEligibility": { "type": "boolean" }
+      }
+    },
+    "taskClasses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "router",
+          "triage",
+          "summarization",
+          "rewrite",
+          "office-assist",
+          "artifact-drafting",
+          "coding-assist",
+          "repo-triage",
+          "privacy-first-chat",
+          "offline-fallback",
+          "operator-assist",
+          "evidence-inspection",
+          "workroom-local",
+          "field-workroom",
+          "operator-selected"
+        ]
+      }
+    },
+    "labels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "local-only",
+          "offline-fallback",
+          "coding",
+          "office",
+          "multilingual",
+          "low-memory",
+          "quality-fallback",
+          "field-kit",
+          "byom-unverified",
+          "byom-verified",
+          "runtime-managed"
+        ]
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "localOnlyDefault",
+        "promptEgressDefault",
+        "allowToolUseDefault",
+        "allowNetworkDefault",
+        "requiresExplicitImport",
+        "requiresEvidence"
+      ],
+      "properties": {
+        "localOnlyDefault": { "type": "boolean" },
+        "promptEgressDefault": { "type": "string", "enum": ["deny", "policy-gated"] },
+        "allowToolUseDefault": { "type": "boolean" },
+        "allowNetworkDefault": { "type": "boolean" },
+        "requiresExplicitImport": { "type": "boolean" },
+        "requiresEvidence": { "type": "boolean" },
+        "eligibleForRoutingBeforeHash": { "type": "boolean", "default": false },
+        "maxPromptChars": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "emitPackVerification",
+        "emitRuntimeHealth",
+        "emitRouteDecision",
+        "emitPromptHashOnly"
+      ],
+      "properties": {
+        "emitPackVerification": { "type": "boolean" },
+        "emitRuntimeHealth": { "type": "boolean" },
+        "emitRouteDecision": { "type": "boolean" },
+        "emitPromptHashOnly": { "type": "boolean" }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}

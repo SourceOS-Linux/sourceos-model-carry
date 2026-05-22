@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryPack",
+  "packId": "urn:srcos:model-carry-pack:tiny-router-small-local",
+  "displayName": "Tiny Router Small Local Pack",
+  "profileKey": "tiny-router",
+  "model": {
+    "name": "small-local-model",
+    "family": "local-small",
+    "parameterClass": "1b",
+    "quantization": "runtime-managed",
+    "format": "ollama-ref",
+    "contextWindowHint": 8192,
+    "diskSizeHintMb": 1400,
+    "memoryHintMb": 4096
+  },
+  "runtimeCompatibility": ["ollama-compatible", "openai-compatible-local"],
+  "footprint": {
+    "minimumFreeGb": 8,
+    "recommendedFreeGb": 16,
+    "minimumRamGb": 8,
+    "recommendedRamGb": 16
+  },
+  "provenance": {
+    "sourceKind": "runtime-catalog",
+    "sourceUrl": null,
+    "licenseRef": "model-license-required",
+    "modelCardRef": null,
+    "sha256": null,
+    "sha256RequiredBeforeEligibility": false
+  },
+  "taskClasses": ["router", "triage", "rewrite", "summarization"],
+  "labels": ["local-only", "low-memory", "runtime-managed"],
+  "policy": {
+    "localOnlyDefault": true,
+    "promptEgressDefault": "deny",
+    "allowToolUseDefault": false,
+    "allowNetworkDefault": false,
+    "requiresExplicitImport": true,
+    "requiresEvidence": true,
+    "eligibleForRoutingBeforeHash": true,
+    "maxPromptChars": 24000
+  },
+  "evidence": {
+    "emitPackVerification": true,
+    "emitRuntimeHealth": true,
+    "emitRouteDecision": true,
+    "emitPromptHashOnly": true
+  },
+  "notes": "Tiny local profile. Runtime-managed model references require explicit operator action."
+}

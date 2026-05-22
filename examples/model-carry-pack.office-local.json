@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryPack",
+  "packId": "urn:srcos:model-carry-pack:office-local-small-local",
+  "displayName": "Office-local Small Local Pack",
+  "profileKey": "office-local",
+  "model": {
+    "name": "office-local-model",
+    "family": "local-office",
+    "parameterClass": "7b",
+    "quantization": "runtime-managed",
+    "format": "runtime-managed",
+    "contextWindowHint": 16384,
+    "diskSizeHintMb": 5200,
+    "memoryHintMb": 12288
+  },
+  "runtimeCompatibility": ["ollama-compatible", "llama.cpp", "openai-compatible-local"],
+  "footprint": {
+    "minimumFreeGb": 32,
+    "recommendedFreeGb": 64,
+    "minimumRamGb": 16,
+    "recommendedRamGb": 24
+  },
+  "provenance": {
+    "sourceKind": "runtime-catalog",
+    "sourceUrl": null,
+    "licenseRef": "model-license-required",
+    "modelCardRef": null,
+    "sha256": null,
+    "sha256RequiredBeforeEligibility": false
+  },
+  "taskClasses": ["office-assist", "summarization", "artifact-drafting", "workroom-local"],
+  "labels": ["local-only", "office", "runtime-managed"],
+  "policy": {
+    "localOnlyDefault": true,
+    "promptEgressDefault": "deny",
+    "allowToolUseDefault": false,
+    "allowNetworkDefault": false,
+    "requiresExplicitImport": true,
+    "requiresEvidence": true,
+    "eligibleForRoutingBeforeHash": true,
+    "maxPromptChars": 48000
+  },
+  "evidence": {
+    "emitPackVerification": true,
+    "emitRuntimeHealth": true,
+    "emitRouteDecision": true,
+    "emitPromptHashOnly": true
+  },
+  "notes": "Office Plane local drafting and summarization profile."
+}

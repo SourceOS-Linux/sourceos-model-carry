@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "PortableAIRoot",
+  "rootId": "urn:srcos:portable-ai-root:laptop-safe-demo",
+  "displayName": "SourceOS Portable AI Laptop-safe Root",
+  "layoutVersion": "sourceos.portable-ai/v1alpha1",
+  "profileKey": "laptop-safe",
+  "directories": {
+    "manifests": "manifests",
+    "runtimes": "runtimes",
+    "models": "models",
+    "cache": "cache",
+    "state": "state",
+    "surfaces": "surfaces",
+    "evidence": "evidence",
+    "tmp": "tmp"
+  },
+  "surfaces": ["turtleterm", "agent-term", "bearbrowser", "local-web"],
+  "modelPackRefs": [
+    "urn:srcos:model-carry-pack:laptop-safe-small-local"
+  ],
+  "policy": {
+    "promptEgressDefault": "deny",
+    "hostWritesDefault": "deny",
+    "toolUseDefault": "deny",
+    "networkDefault": "loopback-only",
+    "runtimeActivation": "agent-machine-gated",
+    "modelDownloads": "explicit-only",
+    "bindAddressDefault": "127.0.0.1",
+    "zeroTraceSupported": true
+  },
+  "evidence": {
+    "preflightDir": "evidence/preflight",
+    "materializationDir": "evidence/materialization",
+    "activationDir": "evidence/activation",
+    "wipeDir": "evidence/wipe",
+    "promptBodiesStored": false
+  },
+  "notes": "Example portable root manifest for SourceOS Portable AI Kit."
+}
