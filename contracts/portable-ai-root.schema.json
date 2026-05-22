@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/portable-ai-root.schema.json",
+  "title": "SourceOS Portable AI Root",
+  "description": "A portable USB/SSD root manifest for a governed SourceOS local AI kit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "rootId",
+    "displayName",
+    "layoutVersion",
+    "profileKey",
+    "directories",
+    "surfaces",
+    "modelPackRefs",
+    "policy",
+    "evidence"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "v0.1" },
+    "kind": { "const": "PortableAIRoot" },
+    "rootId": { "type": "string", "pattern": "^urn:srcos:portable-ai-root:" },
+    "displayName": { "type": "string", "minLength": 1 },
+    "layoutVersion": { "type": "string", "pattern": "^sourceos.portable-ai/" },
+    "profileKey": {
+      "type": "string",
+      "enum": ["tiny-router", "laptop-safe", "office-local", "code-local", "field-kit", "byom-gguf"]
+    },
+    "directories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifests", "runtimes", "models", "cache", "state", "surfaces", "evidence", "tmp"],
+      "properties": {
+        "manifests": { "type": "string" },
+        "runtimes": { "type": "string" },
+        "models": { "type": "string" },
+        "cache": { "type": "string" },
+        "state": { "type": "string" },
+        "surfaces": { "type": "string" },
+        "evidence": { "type": "string" },
+        "tmp": { "type": "string" }
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "enum": ["turtleterm", "agent-term", "bearbrowser", "local-web", "anythingllm-adapter"] }
+    },
+    "modelPackRefs": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^urn:srcos:model-carry-pack:" }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promptEgressDefault",
+        "hostWritesDefault",
+        "toolUseDefault",
+        "networkDefault",
+        "runtimeActivation",
+        "modelDownloads",
+        "bindAddressDefault",
+        "zeroTraceSupported"
+      ],
+      "properties": {
+        "promptEgressDefault": { "type": "string", "enum": ["deny", "policy-gated"] },
+        "hostWritesDefault": { "type": "string", "enum": ["deny", "workroom-scoped", "repo-scoped", "evidence-scoped"] },
+        "toolUseDefault": { "type": "string", "enum": ["deny", "policy-gated"] },
+        "networkDefault": { "type": "string", "enum": ["deny", "loopback-only", "policy-gated"] },
+        "runtimeActivation": { "type": "string", "enum": ["agent-machine-gated"] },
+        "modelDownloads": { "type": "string", "enum": ["explicit-only"] },
+        "bindAddressDefault": { "type": "string", "enum": ["127.0.0.1"] },
+        "zeroTraceSupported": { "type": "boolean" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preflightDir", "materializationDir", "activationDir", "wipeDir", "promptBodiesStored"],
+      "properties": {
+        "preflightDir": { "type": "string" },
+        "materializationDir": { "type": "string" },
+        "activationDir": { "type": "string" },
+        "wipeDir": { "type": "string" },
+        "promptBodiesStored": { "type": "boolean" }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}
