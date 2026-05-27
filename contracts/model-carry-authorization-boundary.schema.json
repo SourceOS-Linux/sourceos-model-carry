@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/model-carry-authorization-boundary.schema.json",
+  "title": "SourceOS Model Carry Authorization Boundary",
+  "description": "Decision-only boundary proving a carry profile is a reference/profile object, not authorization for runtime execution, prompt egress, tool use, model download, training, promotion, or lifecycle mutation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "boundaryId",
+    "profileRef",
+    "profileKind",
+    "carryScope",
+    "authorizationBoundary",
+    "decisionRefs",
+    "evidenceRefs"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "v0.1" },
+    "kind": { "const": "ModelCarryAuthorizationBoundary" },
+    "boundaryId": { "type": "string", "pattern": "^urn:srcos:model-carry-boundary:" },
+    "profileRef": { "type": "string", "pattern": "^urn:srcos:model-profile:" },
+    "profileKind": { "const": "LocalModelProfile" },
+    "carryScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mayCarryProfile", "mayCarryServiceRef", "mayEmitEvidence", "mayRouteLocally"],
+      "properties": {
+        "mayCarryProfile": { "const": true },
+        "mayCarryServiceRef": { "const": true },
+        "mayEmitEvidence": { "const": true },
+        "mayRouteLocally": { "type": "boolean" }
+      }
+    },
+    "authorizationBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorizesPromptEgress",
+        "authorizesNetworkAccess",
+        "authorizesToolUse",
+        "authorizesModelDownload",
+        "authorizesTrainingOnUserData",
+        "authorizesModelPromotion",
+        "authorizesLifecycleMutation"
+      ],
+      "properties": {
+        "authorizesPromptEgress": { "const": false },
+        "authorizesNetworkAccess": { "const": false },
+        "authorizesToolUse": { "const": false },
+        "authorizesModelDownload": { "const": false },
+        "authorizesTrainingOnUserData": { "const": false },
+        "authorizesModelPromotion": { "const": false },
+        "authorizesLifecycleMutation": { "const": false }
+      }
+    },
+    "decisionRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policyDecisionRefs", "routerDecisionRefs", "governanceLedgerRefs", "explicitPullRefs"],
+      "properties": {
+        "policyDecisionRefs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "routerDecisionRefs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "governanceLedgerRefs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "explicitPullRefs": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "evidenceRefs": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+    "notes": { "type": "string" }
+  }
+}
