@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryAuthorizationBoundary",
+  "boundaryId": "urn:srcos:model-carry-boundary:invalid-prompt-egress",
+  "profileRef": "urn:srcos:model-profile:local-llama32-1b",
+  "profileKind": "LocalModelProfile",
+  "carryScope": {
+    "mayCarryProfile": true,
+    "mayCarryServiceRef": true,
+    "mayEmitEvidence": true,
+    "mayRouteLocally": true
+  },
+  "authorizationBoundary": {
+    "authorizesPromptEgress": true,
+    "authorizesNetworkAccess": false,
+    "authorizesToolUse": false,
+    "authorizesModelDownload": false,
+    "authorizesTrainingOnUserData": false,
+    "authorizesModelPromotion": false,
+    "authorizesLifecycleMutation": false
+  },
+  "decisionRefs": {
+    "policyDecisionRefs": [],
+    "routerDecisionRefs": [],
+    "governanceLedgerRefs": [],
+    "explicitPullRefs": []
+  },
+  "evidenceRefs": ["evidence://sourceos-model-carry/invalid/prompt-egress"],
+  "notes": "Invalid fixture: carry profile must not authorize prompt egress."
+}

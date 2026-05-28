@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryAuthorizationBoundary",
+  "boundaryId": "urn:srcos:model-carry-boundary:invalid-download",
+  "profileRef": "urn:srcos:model-profile:local-llama32-1b",
+  "profileKind": "LocalModelProfile",
+  "carryScope": {
+    "mayCarryProfile": true,
+    "mayCarryServiceRef": true,
+    "mayEmitEvidence": true,
+    "mayRouteLocally": true
+  },
+  "authorizationBoundary": {
+    "authorizesPromptEgress": false,
+    "authorizesNetworkAccess": false,
+    "authorizesToolUse": false,
+    "authorizesModelDownload": true,
+    "authorizesTrainingOnUserData": false,
+    "authorizesModelPromotion": false,
+    "authorizesLifecycleMutation": false
+  },
+  "decisionRefs": {
+    "policyDecisionRefs": [],
+    "routerDecisionRefs": [],
+    "governanceLedgerRefs": [],
+    "explicitPullRefs": []
+  },
+  "evidenceRefs": ["evidence://sourceos-model-carry/invalid/model-download"],
+  "notes": "Invalid fixture: carry profile must not authorize model download."
+}

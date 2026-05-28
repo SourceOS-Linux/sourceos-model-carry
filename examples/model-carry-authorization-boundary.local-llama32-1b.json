@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryAuthorizationBoundary",
+  "boundaryId": "urn:srcos:model-carry-boundary:local-llama32-1b",
+  "profileRef": "urn:srcos:model-profile:local-llama32-1b",
+  "profileKind": "LocalModelProfile",
+  "carryScope": {
+    "mayCarryProfile": true,
+    "mayCarryServiceRef": true,
+    "mayEmitEvidence": true,
+    "mayRouteLocally": true
+  },
+  "authorizationBoundary": {
+    "authorizesPromptEgress": false,
+    "authorizesNetworkAccess": false,
+    "authorizesToolUse": false,
+    "authorizesModelDownload": false,
+    "authorizesTrainingOnUserData": false,
+    "authorizesModelPromotion": false,
+    "authorizesLifecycleMutation": false
+  },
+  "decisionRefs": {
+    "policyDecisionRefs": [],
+    "routerDecisionRefs": [],
+    "governanceLedgerRefs": [],
+    "explicitPullRefs": []
+  },
+  "evidenceRefs": ["evidence://sourceos-model-carry/local-llama32-1b/profile-boundary"],
+  "notes": "This record proves the carry profile may be carried and routed locally, but does not authorize prompt egress, network, tool use, download, training, promotion, or lifecycle mutation."
+}
