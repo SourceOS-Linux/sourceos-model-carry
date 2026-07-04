@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/functional-service-carry.schema.json",
+  "title": "SourceOS Functional Service Carry",
+  "description": "Carry-layer metadata for a governed functional model service emitted by SociOS lab repos and consumed by SourceOS image builds. This object carries launch/reference/evidence policy only; it does not carry mutable model state, weights, or tuning authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "carryId",
+    "displayName",
+    "service",
+    "sourceos",
+    "runtime",
+    "policy",
+    "evidence",
+    "integrations"
+  ],
+  "properties": {
+    "schemaVersion": {"const": "functional-service-carry.v0"},
+    "kind": {"const": "FunctionalServiceCarry"},
+    "carryId": {"type": "string", "pattern": "^urn:srcos:model-carry:functional-service:"},
+    "displayName": {"type": "string", "minLength": 1},
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ownerRepository", "function", "manifestRef"],
+      "properties": {
+        "id": {"type": "string"},
+        "ownerRepository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+        "function": {"type": "string"},
+        "manifestRef": {"type": "string"}
+      }
+    },
+    "sourceos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["includeInImageBuilds", "enabledByDefault", "activationRequiresOptIn", "carriesMutableModelState", "carriesModelWeights", "clientRefRequired"],
+      "properties": {
+        "includeInImageBuilds": {"type": "boolean"},
+        "enabledByDefault": {"const": false},
+        "activationRequiresOptIn": {"const": true},
+        "carriesMutableModelState": {"const": false},
+        "carriesModelWeights": {"const": false},
+        "clientRefRequired": {"const": true}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "networkDefault", "launchProfileRef", "healthCheck"],
+      "properties": {
+        "mode": {"type": "string", "enum": ["local-client-reference", "local-runtime-reference", "remote-service-reference"]},
+        "networkDefault": {"type": "string", "enum": ["denied", "policy-approved-only"]},
+        "launchProfileRef": {"type": "string"},
+        "healthCheck": {"type": "string"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["localOnlyDefault", "sendPromptOffDeviceDefault", "allowToolUse", "allowNetwork", "allowModelDownload", "requiresSignedServiceReference", "requiresLedgerForPromotion", "requiresSignedIntentForPersonalTuning"],
+      "properties": {
+        "localOnlyDefault": {"const": true},
+        "sendPromptOffDeviceDefault": {"const": false},
+        "allowToolUse": {"type": "boolean"},
+        "allowNetwork": {"const": false},
+        "allowModelDownload": {"const": false},
+        "requiresSignedServiceReference": {"const": true},
+        "requiresLedgerForPromotion": {"const": true},
+        "requiresSignedIntentForPersonalTuning": {"const": true}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emitRuntimeHealth", "emitRoutingDecision", "emitSmokeReceipt", "emitPromptHashOnly", "smokeReceiptRef"],
+      "properties": {
+        "emitRuntimeHealth": {"type": "boolean"},
+        "emitRoutingDecision": {"type": "boolean"},
+        "emitSmokeReceipt": {"type": "boolean"},
+        "emitPromptHashOnly": {"const": true},
+        "smokeReceiptRef": {"type": "string"}
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["productSurface", "workspaceController", "contractSpine", "carryAuthority", "optInAutomation", "governanceLedger", "router"],
+      "properties": {
+        "productSurface": {"type": "string"},
+        "workspaceController": {"type": "string"},
+        "contractSpine": {"type": "string"},
+        "carryAuthority": {"type": "string"},
+        "optInAutomation": {"type": "string"},
+        "governanceLedger": {"type": "string"},
+        "router": {"type": "string"}
+      }
+    }
+  }
+}
