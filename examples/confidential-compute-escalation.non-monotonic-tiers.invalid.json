@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ConfidentialComputeEscalation",
+  "escalationId": "urn:srcos:cc-escalation:non-monotonic-tiers",
+  "invariants": {
+    "belowMinimumTierIsRejected": true,
+    "unattestedTierRequiringAttestationIsRejected": true,
+    "tierOrderingMustBeMonotonic": true,
+    "receiptHashAlgorithm": "sha256"
+  },
+  "computeTiers": [
+    {
+      "tierRef": "urn:srcos:cc-tier:on-device",
+      "tierClass": "on_device",
+      "rank": 0,
+      "requiresAttestation": false,
+      "attestationKind": "none"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:sealed-enclave",
+      "tierClass": "sealed_enclave",
+      "rank": 2,
+      "requiresAttestation": true,
+      "attestationKind": "enclave_measurement"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:attested-tee",
+      "tierClass": "attested_tee",
+      "rank": 1,
+      "requiresAttestation": true,
+      "attestationKind": "tee_remote_attestation"
+    }
+  ],
+  "sensitivityClassMap": [
+    {
+      "sensitivityClass": "public",
+      "dataResidencyClass": "on_device_only",
+      "minimumTierRef": "urn:srcos:cc-tier:on-device"
+    },
+    {
+      "sensitivityClass": "confidential",
+      "dataResidencyClass": "sealed_compute_only",
+      "minimumTierRef": "urn:srcos:cc-tier:sealed-enclave"
+    }
+  ],
+  "decision": {
+    "requestSensitivityClass": "confidential",
+    "chosenTierRef": "urn:srcos:cc-tier:sealed-enclave",
+    "reason": "Escalated confidential-class inputs to the sealed enclave tier.",
+    "attestationRef": "urn:srcos:attestation:enclave:2026-08-03T00:00:00Z:d4e5f6",
+    "receiptSha256": "9f3132746c03bcc641389e98f423b28e88aaf43b4d357debfdcc0a654448bf8f"
+  },
+  "notes": "INVALID: the compute-tier lattice is not strictly monotonic (attested TEE has rank 1, below the sealed enclave's rank 2, though it appears after it). A non-monotonic ordering makes the minimum-tier comparison meaningless -- REJECTED."
+}

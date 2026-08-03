@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ConfidentialComputeEscalation",
+  "escalationId": "urn:srcos:cc-escalation:below-minimum-tier",
+  "invariants": {
+    "belowMinimumTierIsRejected": true,
+    "unattestedTierRequiringAttestationIsRejected": true,
+    "tierOrderingMustBeMonotonic": true,
+    "receiptHashAlgorithm": "sha256"
+  },
+  "computeTiers": [
+    {
+      "tierRef": "urn:srcos:cc-tier:on-device",
+      "tierClass": "on_device",
+      "rank": 0,
+      "requiresAttestation": false,
+      "attestationKind": "none"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:sealed-enclave",
+      "tierClass": "sealed_enclave",
+      "rank": 1,
+      "requiresAttestation": true,
+      "attestationKind": "enclave_measurement"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:attested-tee",
+      "tierClass": "attested_tee",
+      "rank": 2,
+      "requiresAttestation": true,
+      "attestationKind": "tee_remote_attestation"
+    }
+  ],
+  "sensitivityClassMap": [
+    {
+      "sensitivityClass": "public",
+      "dataResidencyClass": "on_device_only",
+      "minimumTierRef": "urn:srcos:cc-tier:on-device"
+    },
+    {
+      "sensitivityClass": "restricted",
+      "dataResidencyClass": "attested_compute_only",
+      "minimumTierRef": "urn:srcos:cc-tier:attested-tee"
+    }
+  ],
+  "decision": {
+    "requestSensitivityClass": "restricted",
+    "chosenTierRef": "urn:srcos:cc-tier:on-device",
+    "reason": "Routed restricted-class inputs to the on-device tier to save latency.",
+    "attestationRef": null,
+    "receiptSha256": "f86705ca895b2eaa669151564dd1506b3c897df0e9f69b566be9f11c80a7d7b6"
+  },
+  "notes": "INVALID (core teeth): a restricted-class request whose required minimum tier is the attested TEE (rank 2) was run at the on-device tier (rank 0). Fail-closed: running below the required minimum tier is REJECTED, never silently downgraded."
+}

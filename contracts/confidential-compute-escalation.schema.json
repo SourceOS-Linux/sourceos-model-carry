@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/confidential-compute-escalation.schema.json",
+  "title": "SourceOS Confidential Compute Escalation",
+  "description": "The tiered confidential-compute escalation contract (SourceOS-vs-Apple ModelCarry spec, section 5.2). Model execution escalates to a higher confidential-compute tier (e.g. on-device -> sealed enclave -> attested TEE) based on the data-residency / sensitivity class of the inputs. The escalation decision is governed and receipted: a request whose sensitivity class requires a minimum tier MUST run at or above that tier, and any tier that requires attestation MUST carry an attestation reference. Fail-closed is the core invariant: a request run below its required minimum tier is rejected, never silently downgraded. SHA-256 is the authoritative receipt-hash algorithm (FIPS 180-4).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "escalationId",
+    "invariants",
+    "computeTiers",
+    "sensitivityClassMap",
+    "decision"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "v0.1" },
+    "kind": { "const": "ConfidentialComputeEscalation" },
+    "escalationId": {
+      "type": "string",
+      "pattern": "^urn:srcos:cc-escalation:",
+      "description": "SourceOS confidential-compute-escalation URN."
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "belowMinimumTierIsRejected",
+        "unattestedTierRequiringAttestationIsRejected",
+        "tierOrderingMustBeMonotonic",
+        "receiptHashAlgorithm"
+      ],
+      "properties": {
+        "belowMinimumTierIsRejected": {
+          "const": true,
+          "description": "Fail-closed core invariant. A request run at a tier below the minimum required by its sensitivity class MUST be rejected, never silently downgraded to a weaker tier."
+        },
+        "unattestedTierRequiringAttestationIsRejected": {
+          "const": true,
+          "description": "A decision that selects a tier which requires attestation MUST carry a non-null attestationRef; a missing attestation is a hard stop."
+        },
+        "tierOrderingMustBeMonotonic": {
+          "const": true,
+          "description": "computeTiers MUST be ordered by strictly increasing rank. A non-monotonic ordering is non-conformant: the tier lattice must be totally ordered for a minimum-tier comparison to be meaningful."
+        },
+        "receiptHashAlgorithm": {
+          "const": "sha256",
+          "description": "Authoritative receipt-hash algorithm. SHA-256 (FIPS 180-4) only."
+        }
+      }
+    },
+    "computeTiers": {
+      "type": "array",
+      "minItems": 2,
+      "description": "The ordered confidential-compute tier lattice, weakest first. rank is strictly increasing in array order.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["tierRef", "tierClass", "rank", "requiresAttestation", "attestationKind"],
+        "properties": {
+          "tierRef": { "type": "string", "pattern": "^urn:srcos:cc-tier:" },
+          "tierClass": {
+            "type": "string",
+            "enum": ["on_device", "sealed_enclave", "attested_tee"],
+            "description": "The confidential-compute posture of this tier."
+          },
+          "rank": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Position in the tier lattice. Higher rank = stronger confidential-compute guarantee. Strictly increasing across computeTiers in array order."
+          },
+          "requiresAttestation": {
+            "type": "boolean",
+            "description": "Whether selecting this tier requires a non-null attestationRef in the decision."
+          },
+          "attestationKind": {
+            "type": ["string", "null"],
+            "enum": ["none", "enclave_measurement", "tee_remote_attestation", null],
+            "description": "The kind of attestation this tier's guarantee is anchored to. null/none for tiers that require no attestation."
+          }
+        }
+      }
+    },
+    "sensitivityClassMap": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Maps each data-sensitivity / residency class to the minimum confidential-compute tier permitted to process it.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sensitivityClass", "dataResidencyClass", "minimumTierRef"],
+        "properties": {
+          "sensitivityClass": {
+            "type": "string",
+            "enum": ["public", "internal", "confidential", "restricted"],
+            "description": "Sensitivity class of the inputs."
+          },
+          "dataResidencyClass": {
+            "type": "string",
+            "enum": ["on_device_only", "sealed_compute_only", "attested_compute_only"],
+            "description": "Residency posture required for this class, aligned with the estate InferenceReceipt dataResidencyClass vocabulary."
+          },
+          "minimumTierRef": {
+            "type": "string",
+            "pattern": "^urn:srcos:cc-tier:",
+            "description": "tierRef of the weakest tier permitted to process this class. A request in this class run below this tier is rejected."
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requestSensitivityClass",
+        "chosenTierRef",
+        "reason",
+        "attestationRef",
+        "receiptSha256"
+      ],
+      "description": "The governed, receipted escalation decision record.",
+      "properties": {
+        "requestSensitivityClass": {
+          "type": "string",
+          "enum": ["public", "internal", "confidential", "restricted"],
+          "description": "Sensitivity class of the request being routed. MUST be present in sensitivityClassMap."
+        },
+        "chosenTierRef": {
+          "type": "string",
+          "pattern": "^urn:srcos:cc-tier:",
+          "description": "tierRef of the tier the request was actually executed on."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable justification for the escalation decision, propagated as first-class provenance."
+        },
+        "attestationRef": {
+          "type": ["string", "null"],
+          "description": "Reference to the attestation evidence for the chosen tier. MUST be non-null when the chosen tier requiresAttestation."
+        },
+        "receiptSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 (FIPS 180-4) of the decision receipt. Content-addressed; never null."
+        }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}
