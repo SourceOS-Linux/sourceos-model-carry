@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryManifest",
+  "manifestId": "urn:srcos:model-carry-manifest:laptop-safe",
+  "version": 1,
+  "prevManifestSha256": null,
+  "integrity": {
+    "contentHashAlgorithm": "sha256",
+    "transportMustBeIntegrityChecked": true,
+    "integrityFailureIsHardStop": true
+  },
+  "entries": [
+    {
+      "entryId": "urn:srcos:model-carry-entry:office-rewrite-adapter",
+      "entryKind": "adapter",
+      "modelRef": "office-rewrite@llama3.2:3b",
+      "contentSha256": "d2a13f41da9fe4b1c1ac77bd73f18db1ff393a2c570706e9d0308018ef82f256",
+      "policySha256": "5ebc47cbb9475e64eb84aae73b2f4e39cee5a4eba4486cf4012c171a5693a0c2",
+      "targeting": { "deviceClass": ["laptop"], "osVersionRange": null, "locale": null },
+      "baseEntryRef": "urn:srcos:model-carry-entry:llama32-3b-base",
+      "baseContentSha256": "7372678075509b60673cfe1df40dc56801ace22cad6e56277cf4a0b4a359d8e7"
+    }
+  ],
+  "notes": "INVALID: adapter is bound to a base entry that is not present in the manifest."
+}

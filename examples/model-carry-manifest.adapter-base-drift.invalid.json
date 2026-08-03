@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryManifest",
+  "manifestId": "urn:srcos:model-carry-manifest:laptop-safe",
+  "version": 2,
+  "prevManifestSha256": "4888b1850bddd6715434b02a37378ba12fab3102a20277d2434c92082a749e1a",
+  "integrity": {
+    "contentHashAlgorithm": "sha256",
+    "transportMustBeIntegrityChecked": true,
+    "integrityFailureIsHardStop": true
+  },
+  "entries": [
+    {
+      "entryId": "urn:srcos:model-carry-entry:llama32-3b-base",
+      "entryKind": "base",
+      "modelRef": "llama3.2:3b",
+      "contentSha256": "7372678075509b60673cfe1df40dc56801ace22cad6e56277cf4a0b4a359d8e7",
+      "policySha256": "af853ebc3648bc457c414e81b29f88c40931d5c744a89ac42dbd0dacc3aa23b0",
+      "targeting": { "deviceClass": ["laptop"], "osVersionRange": null, "locale": null },
+      "baseEntryRef": null,
+      "baseContentSha256": null
+    },
+    {
+      "entryId": "urn:srcos:model-carry-entry:office-rewrite-adapter",
+      "entryKind": "adapter",
+      "modelRef": "office-rewrite@llama3.2:3b",
+      "contentSha256": "d2a13f41da9fe4b1c1ac77bd73f18db1ff393a2c570706e9d0308018ef82f256",
+      "policySha256": "5ebc47cbb9475e64eb84aae73b2f4e39cee5a4eba4486cf4012c171a5693a0c2",
+      "targeting": { "deviceClass": ["laptop"], "osVersionRange": null, "locale": null },
+      "baseEntryRef": "urn:srcos:model-carry-entry:llama32-3b-base",
+      "baseContentSha256": "326bf933ccae9bd3e98fe7e85dc4dea4124436199e298200c5f86abc62b43df8"
+    }
+  ],
+  "notes": "INVALID: adapter pins a base content hash that does not match the base entry (silent adapter/base drift)."
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ModelCarryManifest",
+  "manifestId": "urn:srcos:model-carry-manifest:laptop-safe",
+  "version": 1,
+  "prevManifestSha256": null,
+  "integrity": {
+    "contentHashAlgorithm": "sha256",
+    "transportMustBeIntegrityChecked": true,
+    "integrityFailureIsHardStop": false
+  },
+  "entries": [
+    {
+      "entryId": "urn:srcos:model-carry-entry:llama32-3b-base",
+      "entryKind": "base",
+      "modelRef": "llama3.2:3b",
+      "contentSha256": "7372678075509b60673cfe1df40dc56801ace22cad6e56277cf4a0b4a359d8e7",
+      "policySha256": "af853ebc3648bc457c414e81b29f88c40931d5c744a89ac42dbd0dacc3aa23b0",
+      "targeting": { "deviceClass": ["laptop"], "osVersionRange": null, "locale": null },
+      "baseEntryRef": null,
+      "baseContentSha256": null
+    }
+  ],
+  "notes": "INVALID: integrityFailureIsHardStop is false; integrity failure must be a hard stop."
+}
