@@ -1,4 +1,4 @@
-.PHONY: build test validate validate-portable-ai validate-model-carry-boundary dist release-dry-run clean
+.PHONY: build test validate validate-portable-ai validate-model-carry-boundary validate-model-carry-manifest dist release-dry-run clean
 
 BIN := sourceos-ai
 DIST_DIR := dist
@@ -23,7 +23,10 @@ validate-portable-ai:
 validate-model-carry-boundary:
 	python3 tools/validate_model_carry_authorization_boundaries.py
 
-validate: build validate-portable-ai validate-model-carry-boundary
+validate-model-carry-manifest:
+	python3 tools/validate_model_carry_manifests.py
+
+validate: build validate-portable-ai validate-model-carry-boundary validate-model-carry-manifest
 	python3 tools/validate_carry_refs.py
 	bin/$(BIN) carry validate --refs examples
 	bin/$(BIN) carry list --refs examples

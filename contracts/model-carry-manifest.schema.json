@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.srcos.ai/model-carry/model-carry-manifest.schema.json",
+  "title": "SourceOS Model Carry Manifest",
+  "description": "A content-addressed, hash-chained model manifest for the SourceOS model-router carry layer. Names every carried model and adapter with a base-version binding, a targeting predicate, an authoritative SHA-256 content hash, and a policy hash. This is the model-layer analogue of Exodus provenance: model identity is verifiable, not asserted. Integrity failure is a hard stop, not a routing hint. SHA-256 is the authoritative content-hash algorithm (FIPS 180-4).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "kind",
+    "manifestId",
+    "version",
+    "prevManifestSha256",
+    "integrity",
+    "entries"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "v0.1" },
+    "kind": { "const": "ModelCarryManifest" },
+    "manifestId": { "type": "string", "pattern": "^urn:srcos:model-carry-manifest:" },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonic manifest version. version 1 is the genesis manifest and MUST have a null prevManifestSha256; every later version MUST link the previous manifest by SHA-256."
+    },
+    "prevManifestSha256": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the previous manifest in the chain, or null for the genesis manifest (version 1)."
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contentHashAlgorithm",
+        "transportMustBeIntegrityChecked",
+        "integrityFailureIsHardStop"
+      ],
+      "properties": {
+        "contentHashAlgorithm": {
+          "const": "sha256",
+          "description": "Authoritative content-hash algorithm. SHA-256 (FIPS 180-4) only."
+        },
+        "transportMustBeIntegrityChecked": {
+          "const": true,
+          "description": "Carried artifacts MUST arrive through integrity-checked transport; unchecked transport is non-conformant."
+        },
+        "integrityFailureIsHardStop": {
+          "const": true,
+          "description": "A carried artifact whose content hash does not match its manifest entry MUST be rejected. Integrity failure is a hard stop surfaced as an uncertainty signal to the decision surface, never a silent fallback."
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entryId",
+          "entryKind",
+          "modelRef",
+          "contentSha256",
+          "policySha256",
+          "targeting",
+          "baseEntryRef",
+          "baseContentSha256"
+        ],
+        "properties": {
+          "entryId": { "type": "string", "pattern": "^urn:srcos:model-carry-entry:" },
+          "entryKind": { "type": "string", "enum": ["base", "adapter"] },
+          "modelRef": { "type": "string", "minLength": 1 },
+          "contentSha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Authoritative SHA-256 of the carried artifact content. Never null: content-addressing is not optional at the manifest layer."
+          },
+          "policySha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 of the policy object bound to this entry."
+          },
+          "targeting": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["deviceClass"],
+            "description": "Targeting predicate deciding which device class, OS version range, and locale this entry applies to.",
+            "properties": {
+              "deviceClass": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "enum": ["laptop", "workstation", "field-kit", "server", "any"] }
+              },
+              "osVersionRange": { "type": ["string", "null"] },
+              "locale": {
+                "type": ["array", "null"],
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "baseEntryRef": {
+            "type": ["string", "null"],
+            "pattern": "^urn:srcos:model-carry-entry:",
+            "description": "For entryKind=adapter: the entryId of the base this adapter is registered against. Null for entryKind=base."
+          },
+          "baseContentSha256": {
+            "type": ["string", "null"],
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "For entryKind=adapter: the pinned SHA-256 of the base content this adapter was registered against. Must equal the referenced base entry contentSha256. Null for entryKind=base."
+          }
+        }
+      }
+    },
+    "notes": { "type": "string" }
+  }
+}
