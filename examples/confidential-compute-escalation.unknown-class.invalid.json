@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ConfidentialComputeEscalation",
+  "escalationId": "urn:srcos:cc-escalation:unknown-class",
+  "invariants": {
+    "belowMinimumTierIsRejected": true,
+    "unattestedTierRequiringAttestationIsRejected": true,
+    "tierOrderingMustBeMonotonic": true,
+    "receiptHashAlgorithm": "sha256"
+  },
+  "computeTiers": [
+    {
+      "tierRef": "urn:srcos:cc-tier:on-device",
+      "tierClass": "on_device",
+      "rank": 0,
+      "requiresAttestation": false,
+      "attestationKind": "none"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:attested-tee",
+      "tierClass": "attested_tee",
+      "rank": 1,
+      "requiresAttestation": true,
+      "attestationKind": "tee_remote_attestation"
+    }
+  ],
+  "sensitivityClassMap": [
+    {
+      "sensitivityClass": "public",
+      "dataResidencyClass": "on_device_only",
+      "minimumTierRef": "urn:srcos:cc-tier:on-device"
+    }
+  ],
+  "decision": {
+    "requestSensitivityClass": "restricted",
+    "chosenTierRef": "urn:srcos:cc-tier:attested-tee",
+    "reason": "Escalated a request whose sensitivity class is not declared in the map.",
+    "attestationRef": "urn:srcos:attestation:tee:2026-08-03T00:00:00Z:aa11bb",
+    "receiptSha256": "a000273d28036365ab9512054dc864cf85b2d7ee63365615c7ec19935371291b"
+  },
+  "notes": "INVALID: the request's sensitivity class (restricted) is not declared in sensitivityClassMap. Fail-closed: an undeclared class has no known minimum tier and is REJECTED, never defaulted to the weakest tier."
+}

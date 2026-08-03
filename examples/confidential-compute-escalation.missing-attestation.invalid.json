@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "v0.1",
+  "kind": "ConfidentialComputeEscalation",
+  "escalationId": "urn:srcos:cc-escalation:missing-attestation",
+  "invariants": {
+    "belowMinimumTierIsRejected": true,
+    "unattestedTierRequiringAttestationIsRejected": true,
+    "tierOrderingMustBeMonotonic": true,
+    "receiptHashAlgorithm": "sha256"
+  },
+  "computeTiers": [
+    {
+      "tierRef": "urn:srcos:cc-tier:on-device",
+      "tierClass": "on_device",
+      "rank": 0,
+      "requiresAttestation": false,
+      "attestationKind": "none"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:sealed-enclave",
+      "tierClass": "sealed_enclave",
+      "rank": 1,
+      "requiresAttestation": true,
+      "attestationKind": "enclave_measurement"
+    },
+    {
+      "tierRef": "urn:srcos:cc-tier:attested-tee",
+      "tierClass": "attested_tee",
+      "rank": 2,
+      "requiresAttestation": true,
+      "attestationKind": "tee_remote_attestation"
+    }
+  ],
+  "sensitivityClassMap": [
+    {
+      "sensitivityClass": "public",
+      "dataResidencyClass": "on_device_only",
+      "minimumTierRef": "urn:srcos:cc-tier:on-device"
+    },
+    {
+      "sensitivityClass": "restricted",
+      "dataResidencyClass": "attested_compute_only",
+      "minimumTierRef": "urn:srcos:cc-tier:attested-tee"
+    }
+  ],
+  "decision": {
+    "requestSensitivityClass": "restricted",
+    "chosenTierRef": "urn:srcos:cc-tier:attested-tee",
+    "reason": "Escalated restricted-class inputs to the attested TEE tier.",
+    "attestationRef": null,
+    "receiptSha256": "161e8aab373e326d177a3bf572f3e8c7218973890214682926c0c8ae106e2f4c"
+  },
+  "notes": "INVALID: the chosen attested TEE tier requiresAttestation, but the decision carries no attestationRef. A tier whose guarantee is anchored to attestation cannot be selected without an attestation reference -- REJECTED."
+}
